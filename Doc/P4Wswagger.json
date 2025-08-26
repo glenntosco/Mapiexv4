@@ -1,0 +1,5814 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "P4W Api Gateway",
+    "contact": {
+      "name": "Pro4Soft",
+      "url": "https://www.p4warehouse.com/"
+    },
+    "version": "v1"
+  },
+  "paths": {
+    "/adjustments": {
+      "post": {
+        "tags": [
+          "Adjustments"
+        ],
+        "summary": "Returns adjustments on given query.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustmentQuery"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustmentQuery"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustmentQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Adjustment"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Adjustment"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Adjustment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/adjustments/upload": {
+      "post": {
+        "tags": [
+          "Adjustments"
+        ],
+        "summary": "Marks a set of adjustments as uploaded",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetIntegrationReferenceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetIntegrationReferenceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetIntegrationReferenceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/client-invoices": {
+      "get": {
+        "tags": [
+          "ClientInvoices"
+        ],
+        "summary": "Returns client invoices",
+        "parameters": [
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientInvoiceBase"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientInvoiceBase"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientInvoiceBase"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/client-invoices/{id}": {
+      "get": {
+        "tags": [
+          "ClientInvoices"
+        ],
+        "summary": "Returns a single client invoice by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientInvoice"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientInvoice"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientInvoice"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/clients": {
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Returns all clients",
+        "parameters": [
+          {
+            "name": "clientName",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientGetList"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientGetList"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientGetList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer-returns": {
+      "post": {
+        "tags": [
+          "CustomerReturns"
+        ],
+        "summary": "Create new customer return",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerReturnCreate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerReturnCreate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerReturnCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "CustomerReturns"
+        ],
+        "summary": "Update an existing customer return",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerReturnUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerReturnUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerReturnUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "CustomerReturns"
+        ],
+        "summary": "Returns all open customer returns",
+        "parameters": [
+          {
+            "name": "ClientId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerReturnGetList"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerReturnGetList"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerReturnGetList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer-returns/upload": {
+      "post": {
+        "tags": [
+          "CustomerReturns"
+        ],
+        "summary": "Upload an existing pending customer return",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/customer-returns/{id}": {
+      "delete": {
+        "tags": [
+          "CustomerReturns"
+        ],
+        "summary": "Delete customer return by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "CustomerReturns"
+        ],
+        "summary": "Returns a single customer return by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerReturnDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerReturnDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerReturnDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers": {
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Create new customer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerCreate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerCreate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Update an existing customer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Returns all customers",
+        "parameters": [
+          {
+            "name": "CustomerCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ClientId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerDetails"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerDetails"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerDetails"
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{id}": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Returns a single customer by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerDetails"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Delete customer by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inventory": {
+      "get": {
+        "tags": [
+          "InventoryItems"
+        ],
+        "summary": "Returns inventory",
+        "parameters": [
+          {
+            "name": "warehouseId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "clientId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InventoryItem"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InventoryItem"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InventoryItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pick-tickets": {
+      "post": {
+        "tags": [
+          "PickTickets"
+        ],
+        "summary": "Create new pick ticket",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PickTicketCreate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PickTicketCreate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PickTicketCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "PickTickets"
+        ],
+        "summary": "Update an existing pick ticket",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PickTicketUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PickTicketUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PickTicketUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "PickTickets"
+        ],
+        "summary": "Returns pick ticket list",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PickTicketGetList"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PickTicketGetList"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PickTicketGetList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pick-tickets/{id}": {
+      "delete": {
+        "tags": [
+          "PickTickets"
+        ],
+        "summary": "Delete pick-ticket by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "PickTickets"
+        ],
+        "summary": "Returns a single pick ticket by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PickTicketGetDetail"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PickTicketGetDetail"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PickTicketGetDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pick-tickets/upload": {
+      "post": {
+        "tags": [
+          "PickTickets"
+        ],
+        "summary": "Upload an existing pending pick tickets",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/pick-tickets/id-lookup": {
+      "get": {
+        "tags": [
+          "PickTickets"
+        ],
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/production-orders": {
+      "get": {
+        "tags": [
+          "ProductionOrder"
+        ],
+        "summary": "Returns production order list",
+        "parameters": [
+          {
+            "name": "warehouseId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductionOrderGetList"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductionOrderGetList"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductionOrderGetList"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ProductionOrder"
+        ],
+        "summary": "Create new production-order",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionOrderCreate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionOrderCreate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionOrderCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ProductionOrder"
+        ],
+        "summary": "Update an existing production-order",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionOrderUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionOrderUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionOrderUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/production-orders/{id}": {
+      "get": {
+        "tags": [
+          "ProductionOrder"
+        ],
+        "summary": "Returns a single production order by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionOrderGetDetail"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionOrderGetDetail"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionOrderGetDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ProductionOrder"
+        ],
+        "summary": "Delete production-order by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/production-orders/upload": {
+      "post": {
+        "tags": [
+          "ProductionOrder"
+        ],
+        "summary": "Upload an existing pending production order",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Returns products list",
+        "parameters": [
+          {
+            "name": "Sku",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ClientId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductGetList"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductGetList"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductGetList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Create new product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCreate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCreate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGetList"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGetList"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGetList"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Update an existing product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGetList"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGetList"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGetList"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Returns a single product by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGetDetail"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGetDetail"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGetDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Delete product by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/purchase-orders": {
+      "get": {
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "summary": "Returns purchase orders list",
+        "parameters": [
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PurchaseOrderGetList"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PurchaseOrderGetList"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PurchaseOrderGetList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "summary": "Create new purchase order",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderCreate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderCreate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "summary": "Update an existing purchase order",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "summary": "Delete purchase order by code and clientId",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "clientId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/purchase-orders/upload": {
+      "post": {
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "summary": "Upload an existing pending purchase orders",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/purchase-orders/{id}": {
+      "delete": {
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "summary": "Delete purchase-order by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "summary": "Returns a single purchase order by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseOrderGetDetail"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseOrderGetDetail"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseOrderGetDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vendors": {
+      "post": {
+        "tags": [
+          "Vendors"
+        ],
+        "summary": "Create new vendor",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VendorCreate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VendorCreate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VendorCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vendors"
+        ],
+        "summary": "Update an existing vendor",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VendorUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VendorUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VendorUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDocument"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Vendors"
+        ],
+        "summary": "Returns vendors",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "clientId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VendorGetList"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VendorGetList"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VendorGetList"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vendors/{id}": {
+      "delete": {
+        "tags": [
+          "Vendors"
+        ],
+        "summary": "Delete vendor by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Vendors"
+        ],
+        "summary": "Returns a single vendor by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorDetails"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/warehouses": {
+      "get": {
+        "tags": [
+          "Warehouses"
+        ],
+        "summary": "Returns list of warehouses",
+        "parameters": [
+          {
+            "name": "warehouseCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Warehouse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Warehouse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Warehouse"
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "address1": {
+            "type": "string",
+            "nullable": true
+          },
+          "address2": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "stateProvince": {
+            "type": "string",
+            "nullable": true
+          },
+          "zipPostal": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Adjustment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "client": {
+            "type": "string",
+            "nullable": true
+          },
+          "subType": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "fromWarehouse": {
+            "type": "string",
+            "nullable": true
+          },
+          "toWarehouse": {
+            "type": "string",
+            "nullable": true
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "packsizeId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "eachCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "numberOfPacks": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "lotNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdjustmentQuery": {
+        "type": "object",
+        "properties": {
+          "condition": {
+            "type": "string",
+            "nullable": true
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rule"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BarcodeType": {
+        "enum": [
+          "Code128",
+          "ITF14",
+          "EAN13",
+          "UPCA"
+        ],
+        "type": "string"
+      },
+      "ClientGetList": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "ssccCompanyId": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientInvoice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "invoiceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startPeriod": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endPeriod": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "postingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "subTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "client": {
+            "$ref": "#/components/schemas/ClientGetList"
+          },
+          "fromName": {
+            "type": "string",
+            "nullable": true
+          },
+          "fromAddress1": {
+            "type": "string",
+            "nullable": true
+          },
+          "fromAddress2": {
+            "type": "string",
+            "nullable": true
+          },
+          "fromCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "fromStateProvince": {
+            "type": "string",
+            "nullable": true
+          },
+          "fromZipPostalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "fromCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "billToName": {
+            "type": "string",
+            "nullable": true
+          },
+          "billToAddress1": {
+            "type": "string",
+            "nullable": true
+          },
+          "billToAddress2": {
+            "type": "string",
+            "nullable": true
+          },
+          "billToCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "billToStateProvince": {
+            "type": "string",
+            "nullable": true
+          },
+          "billToZipPostalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "billToCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientInvoiceLine"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientInvoiceBase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "invoiceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startPeriod": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endPeriod": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "postingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "subTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientInvoiceLine": {
+        "type": "object",
+        "properties": {
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "item": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalCharges": {
+            "type": "string",
+            "nullable": true
+          },
+          "rate": {
+            "type": "number",
+            "format": "double"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerCreate": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactPerson": {
+            "type": "string",
+            "nullable": true
+          },
+          "taxId": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "customerCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerDetails": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactPerson": {
+            "type": "string",
+            "nullable": true
+          },
+          "taxId": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "client": {
+            "$ref": "#/components/schemas/ClientGetList"
+          },
+          "customerCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerReturnCreate": {
+        "type": "object",
+        "properties": {
+          "trackingNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "carrier": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "warehouseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "customerReturnNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "from": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerReturnLineCreateUpdate"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerReturnDetails": {
+        "type": "object",
+        "properties": {
+          "trackingNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "carrier": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "customerReturnNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "customer": {
+            "$ref": "#/components/schemas/CustomerDetails"
+          },
+          "warehouse": {
+            "$ref": "#/components/schemas/Warehouse"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerReturnLineGet"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerReturnGetList": {
+        "type": "object",
+        "properties": {
+          "trackingNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "carrier": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "customerReturnNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "customer": {
+            "$ref": "#/components/schemas/CustomerDetails"
+          },
+          "warehouse": {
+            "$ref": "#/components/schemas/Warehouse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerReturnLineCreateUpdate": {
+        "type": "object",
+        "properties": {
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "packsize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "numberOfPacks": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "instructions": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerReturnLineGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductGetList"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "receivedQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "damagedQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "toteLineId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerReturnLineGetDetails"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerReturnLineGetDetails": {
+        "type": "object",
+        "properties": {
+          "toteLineDetailId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "receivedQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "lotNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "packsizeEachCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerReturnUpdate": {
+        "type": "object",
+        "properties": {
+          "trackingNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "carrier": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "from": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerReturnLineCreateUpdate"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerUpdate": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactPerson": {
+            "type": "string",
+            "nullable": true
+          },
+          "taxId": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FreightClass": {
+        "enum": [
+          "Class50",
+          "Class55",
+          "Class60",
+          "Class65",
+          "Class70",
+          "Class77p5",
+          "Class85",
+          "Class92p5",
+          "Class100",
+          "Class110",
+          "Class125",
+          "Class150",
+          "Class175",
+          "Class200",
+          "Class250",
+          "Class300",
+          "Class400",
+          "Class500"
+        ],
+        "type": "string"
+      },
+      "FreightType": {
+        "enum": [
+          "TruckLoad",
+          "SmallParcel",
+          "PrivateFleet",
+          "External"
+        ],
+        "type": "string"
+      },
+      "IdDocument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InventoryItem": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "warehouseId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "isSerialControlled": {
+            "type": "boolean"
+          },
+          "isExpiryControlled": {
+            "type": "boolean"
+          },
+          "isDecimalControlled": {
+            "type": "boolean"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryItemDetails"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "InventoryItemDetails": {
+        "type": "object",
+        "properties": {
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "lotNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiry": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "eachCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PickTicketCreate": {
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "poNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "pickingInstructions": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancelDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "freightType": {
+            "$ref": "#/components/schemas/FreightType"
+          },
+          "routeNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "freightTerms": {
+            "type": "string",
+            "nullable": true
+          },
+          "carrier": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingService": {
+            "type": "string",
+            "nullable": true
+          },
+          "shipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "warehouseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "customerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pickTicketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "shipFrom": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "shipTo": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "billTo": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PickTicketLineCreateUpdate"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PickTicketGetDetail": {
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "poNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "pickingInstructions": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancelDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "freightType": {
+            "$ref": "#/components/schemas/FreightType"
+          },
+          "routeNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "freightTerms": {
+            "type": "string",
+            "nullable": true
+          },
+          "carrier": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingService": {
+            "type": "string",
+            "nullable": true
+          },
+          "shipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "warehouse": {
+            "$ref": "#/components/schemas/Warehouse"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/CustomerDetails"
+          },
+          "pickTicketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "totes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tote"
+            },
+            "nullable": true
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PickTicketLineGet"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PickTicketGetList": {
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "poNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "pickingInstructions": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancelDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "freightType": {
+            "$ref": "#/components/schemas/FreightType"
+          },
+          "routeNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "freightTerms": {
+            "type": "string",
+            "nullable": true
+          },
+          "carrier": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingService": {
+            "type": "string",
+            "nullable": true
+          },
+          "shipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "warehouse": {
+            "$ref": "#/components/schemas/Warehouse"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/CustomerDetails"
+          },
+          "pickTicketNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PickTicketLineCreateUpdate": {
+        "type": "object",
+        "properties": {
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "packsize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "numberOfPacks": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orderedQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PickTicketLineGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductGetList"
+          },
+          "orderedQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "pickedQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "shippedQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PickTicketUpdate": {
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "poNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "pickingInstructions": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancelDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "freightType": {
+            "$ref": "#/components/schemas/FreightType"
+          },
+          "routeNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "freightTerms": {
+            "type": "string",
+            "nullable": true
+          },
+          "carrier": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingService": {
+            "type": "string",
+            "nullable": true
+          },
+          "shipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shipFrom": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "shipTo": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "billTo": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PickTicketLineCreateUpdate"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "ProductComponent": {
+        "type": "object",
+        "properties": {
+          "componentProductId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductCreate": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "upc": {
+            "type": "string",
+            "nullable": true
+          },
+          "barcodeType": {
+            "$ref": "#/components/schemas/BarcodeType"
+          },
+          "barcodeValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "isLotControlled": {
+            "type": "boolean"
+          },
+          "lotPattern": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSerialControlled": {
+            "type": "boolean"
+          },
+          "isBillOfMaterial": {
+            "type": "boolean"
+          },
+          "serialPattern": {
+            "type": "string",
+            "nullable": true
+          },
+          "isExpiryControlled": {
+            "type": "boolean"
+          },
+          "isDecimalControlled": {
+            "type": "boolean"
+          },
+          "isPacksizeControlled": {
+            "type": "boolean"
+          },
+          "palletTie": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "palletHeight": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "height": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "length": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "width": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "weight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "dimsLengthUnitOfMeasure": {
+            "$ref": "#/components/schemas/UnitOfMeasure"
+          },
+          "dimsWeightUnitOfMeasure": {
+            "$ref": "#/components/schemas/UnitOfMeasure"
+          },
+          "unitOfMeasure": {
+            "$ref": "#/components/schemas/UnitOfMeasure"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "freightClass": {
+            "$ref": "#/components/schemas/FreightClass"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "nmfc": {
+            "type": "string",
+            "nullable": true
+          },
+          "commodityDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "htsCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryOfOrigin": {
+            "type": "string",
+            "nullable": true
+          },
+          "packsizes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductPacksize"
+            },
+            "nullable": true
+          },
+          "productComponents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductComponent"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductGetDetail": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "upc": {
+            "type": "string",
+            "nullable": true
+          },
+          "barcodeType": {
+            "$ref": "#/components/schemas/BarcodeType"
+          },
+          "barcodeValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "client": {
+            "$ref": "#/components/schemas/ClientGetList"
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "isLotControlled": {
+            "type": "boolean"
+          },
+          "lotPattern": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSerialControlled": {
+            "type": "boolean"
+          },
+          "isBillOfMaterial": {
+            "type": "boolean"
+          },
+          "serialPattern": {
+            "type": "string",
+            "nullable": true
+          },
+          "isExpiryControlled": {
+            "type": "boolean"
+          },
+          "isDecimalControlled": {
+            "type": "boolean"
+          },
+          "isPacksizeControlled": {
+            "type": "boolean"
+          },
+          "palletTie": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "palletHeight": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "height": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "length": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "width": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "weight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "dimsLengthUnitOfMeasure": {
+            "$ref": "#/components/schemas/UnitOfMeasure"
+          },
+          "dimsWeightUnitOfMeasure": {
+            "$ref": "#/components/schemas/UnitOfMeasure"
+          },
+          "unitOfMeasure": {
+            "$ref": "#/components/schemas/UnitOfMeasure"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "freightClass": {
+            "$ref": "#/components/schemas/FreightClass"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "nmfc": {
+            "type": "string",
+            "nullable": true
+          },
+          "commodityDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "htsCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryOfOrigin": {
+            "type": "string",
+            "nullable": true
+          },
+          "packsizes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductPacksize"
+            },
+            "nullable": true
+          },
+          "productComponents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductComponent"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductGetList": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "upc": {
+            "type": "string",
+            "nullable": true
+          },
+          "barcodeType": {
+            "$ref": "#/components/schemas/BarcodeType"
+          },
+          "barcodeValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "client": {
+            "$ref": "#/components/schemas/ClientGetList"
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductPacksize": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "eachCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "barcodeValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "barcodeType": {
+            "$ref": "#/components/schemas/BarcodeType"
+          },
+          "height": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "width": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "length": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "weight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "palletTie": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "palletHeight": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductUpdate": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "upc": {
+            "type": "string",
+            "nullable": true
+          },
+          "barcodeType": {
+            "$ref": "#/components/schemas/BarcodeType"
+          },
+          "barcodeValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "isLotControlled": {
+            "type": "boolean"
+          },
+          "lotPattern": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSerialControlled": {
+            "type": "boolean"
+          },
+          "isBillOfMaterial": {
+            "type": "boolean"
+          },
+          "serialPattern": {
+            "type": "string",
+            "nullable": true
+          },
+          "isExpiryControlled": {
+            "type": "boolean"
+          },
+          "isDecimalControlled": {
+            "type": "boolean"
+          },
+          "isPacksizeControlled": {
+            "type": "boolean"
+          },
+          "palletTie": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "palletHeight": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "height": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "length": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "width": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "weight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "dimsLengthUnitOfMeasure": {
+            "$ref": "#/components/schemas/UnitOfMeasure"
+          },
+          "dimsWeightUnitOfMeasure": {
+            "$ref": "#/components/schemas/UnitOfMeasure"
+          },
+          "unitOfMeasure": {
+            "$ref": "#/components/schemas/UnitOfMeasure"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "freightClass": {
+            "$ref": "#/components/schemas/FreightClass"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "nmfc": {
+            "type": "string",
+            "nullable": true
+          },
+          "commodityDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "htsCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryOfOrigin": {
+            "type": "string",
+            "nullable": true
+          },
+          "packsizes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductPacksize"
+            },
+            "nullable": true
+          },
+          "productComponents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductComponent"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductionOrderCreate": {
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "warehouseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productionOrderNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "inLines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductionOrderInLineCreateUpdate"
+            },
+            "nullable": true
+          },
+          "outLines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductionOrderOutLineCreateUpdate"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductionOrderGetDetail": {
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productionOrderNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "warehouse": {
+            "$ref": "#/components/schemas/Warehouse"
+          },
+          "inLines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductionOrderInLineGet"
+            },
+            "nullable": true
+          },
+          "outLines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductionOrderOutLineGet"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductionOrderGetList": {
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productionOrderNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "warehouse": {
+            "$ref": "#/components/schemas/Warehouse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductionOrderInLineCreateUpdate": {
+        "type": "object",
+        "properties": {
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductionOrderInLineGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductGetList"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "producedQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductionOrderOutLineCreateUpdate": {
+        "type": "object",
+        "properties": {
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "lotNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductionOrderOutLineGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductGetList"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "consumedQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductionOrderUpdate": {
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "inLines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductionOrderInLineCreateUpdate"
+            },
+            "nullable": true
+          },
+          "outLines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductionOrderOutLineCreateUpdate"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderCreate": {
+        "type": "object",
+        "properties": {
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "requiredDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "vendorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "warehouseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "purchaseOrderNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrderLineCreateUpdate"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderGetDetail": {
+        "type": "object",
+        "properties": {
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "requiredDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vendor": {
+            "$ref": "#/components/schemas/VendorGetList"
+          },
+          "warehouse": {
+            "$ref": "#/components/schemas/Warehouse"
+          },
+          "purchaseOrderNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrderLineGet"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderGetList": {
+        "type": "object",
+        "properties": {
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "requiredDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "purchaseOrderNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "closeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "vendor": {
+            "$ref": "#/components/schemas/VendorGetList"
+          },
+          "warehouse": {
+            "$ref": "#/components/schemas/Warehouse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderLineCreateUpdate": {
+        "type": "object",
+        "properties": {
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "packsize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "numberOfPacks": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orderedQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderLineGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductGetList"
+          },
+          "orderedQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "receivedQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrderLineGetDetail"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderLineGetDetail": {
+        "type": "object",
+        "properties": {
+          "receivedQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "lotNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "packsizeEachCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderUpdate": {
+        "type": "object",
+        "properties": {
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference1": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference2": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference3": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "requiredDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrderLineCreateUpdate"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Rule": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "operator": {
+            "type": "string",
+            "nullable": true
+          },
+          "condition": {
+            "type": "string",
+            "nullable": true
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rule"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SetIntegrationReferenceRequest": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          },
+          "integrationReference": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "integrationMessage": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Tote": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sscc18Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "bolNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "cartonNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "carrier": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingService": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingCost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "shippingCostCurrency": {
+            "type": "string",
+            "nullable": true
+          },
+          "trackTraceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToteLine"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToteLine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pickedQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "shippedQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "deliveredQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "pickTicketLineId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductGetList"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToteLineDetail"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToteLineDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pickedQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "shippedQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "deliveredQuantity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lotNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "packsizeEachCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UnitOfMeasure": {
+        "enum": [
+          "Gr",
+          "Kg",
+          "Oz",
+          "Lb",
+          "Ml",
+          "L",
+          "Pt",
+          "Gal",
+          "Mm",
+          "Cm",
+          "M",
+          "In",
+          "Ft"
+        ],
+        "type": "string"
+      },
+      "UploadRequest": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          },
+          "uploadedSuceeded": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "uploadMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "resetUploadCount": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VendorCreate": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactPerson": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "vendorCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VendorDetails": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactPerson": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "client": {
+            "$ref": "#/components/schemas/ClientGetList"
+          },
+          "vendorCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VendorGetList": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactPerson": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "client": {
+            "$ref": "#/components/schemas/ClientGetList"
+          },
+          "vendorCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VendorUpdate": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactPerson": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Warehouse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "warehouseCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "description": "Api key taken from 'Gateway API key' setting.",
+        "name": "ApiKey",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKey": [ ]
+    }
+  ]
+}

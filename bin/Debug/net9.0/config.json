@@ -1,0 +1,97 @@
+{
+  "Companies": [
+    {
+      "CompanyName": "DEMO_MAPIEX_AVIATION",
+      "SapB1": {
+        "ServiceLayerUrl": "https://rp.boyala.com/su11/b1s/v2",
+        "CompanyDb": "DEMO_MAPIEX_AVIATION",
+        "ClientName": "mapiexdev",
+        "UserName": "mpx188",
+        "Password": "Panama123@@"
+      },
+      "P4WarehouseApiKey": "09a234b9-32b5-4cb8-9106-81d2fce625ac_pRk6hihW29XNt8gApc/BoaaoCiYcJqNU41Bualy1KALdab+MkNhbSiz1fq9G+QXyARfggaF80SxS0xolvxCdsA==",
+      "Settings": {
+        "ProductBatchSize": 100,
+        "DefaultWarehouseCode": "01",
+        "LogRetentionDays": 30,
+        "UseSqlStateManager": true,
+        "UseUnitOfMeasure": false
+      }
+    }
+  ],
+  "Schedules": [
+    {
+      "Name": "ProductSync",
+      "Active": true,
+      "RunOnStartup": true,
+      "Interval": "00:03:30",
+      "Class": "P4WIntegration.Workers.Downloads.ProductSync",
+      "SyncMode": "Full"
+    },
+    {
+      "Name": "CustomerSync",
+      "Active": false,
+      "RunOnStartup": false,
+      "Interval": "00:00:10",
+      "Class": "P4WIntegration.Workers.Downloads.CustomerSyncWorker",
+      "SyncMode": "Detla"
+    },
+    {
+      "Name": "VendorSync",
+      "Active": false,
+      "RunOnStartup": false,
+      "Interval": "00:00:20",
+      "Class": "P4WIntegration.Workers.Downloads.VendorSyncWorker",
+      "SyncMode": "Detla"
+    },
+    {
+      "Name": "PurchaseOrderSync",
+      "Active": false,
+      "RunOnStartup": false,
+      "Interval": "00:00:30",
+      "Class": "P4WIntegration.Workers.Downloads.PurchaseOrderSyncWorker",
+      "SyncMode": "Full",
+      "ForceSync": false
+    },
+    {
+      "Name": "SalesOrderSync",
+      "Active": false,
+      "RunOnStartup": false,
+      "Interval": "00:00:59",
+      "Class": "P4WIntegration.Workers.Downloads.SalesOrderSyncWorker",
+      "SyncMode": "Full"
+    },
+    {
+      "Name": "GoodsReceiptUpload",
+      "Active": false,
+      "RunOnStartup": false,
+      "Interval": "00:10:00",
+      "Class": "P4WIntegration.Workers.Uploads.GoodsReceiptUploadWorker",
+      "BatchSize": 50
+    },
+    {
+      "Name": "GoodsDeliveryUpload",
+      "Active": false,
+      "RunOnStartup": false,
+      "Interval": "00:10:00",
+      "Class": "P4WIntegration.Workers.Uploads.GoodsDeliveryUploadWorker",
+      "BatchSize": 50
+    },
+    {
+      "Name": "ReturnSync",
+      "Active": false,
+      "RunOnStartup": false,
+      "Interval": "00:05:00",
+      "Class": "P4WIntegration.Workers.Downloads.ReturnSyncWorker",
+      "SyncMode": "Delta"
+    },
+    {
+      "Name": "ReturnUpload",
+      "Active": false,
+      "RunOnStartup": false,
+      "Interval": "00:10:00",
+      "Class": "P4WIntegration.Workers.Uploads.ReturnUploadWorker",
+      "BatchSize": 50
+    }
+  ]
+}

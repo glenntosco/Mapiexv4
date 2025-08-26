@@ -1,0 +1,1514 @@
+{
+  "info": {
+    "name": "SAP B1 v10 Service Layer v2 - Complete Collection",
+    "description": "Comprehensive SAP Business One v10 Service Layer API collection (OData v4).\n\n⚠️ NAVIGATION PROPERTY ISSUES:\nIf you get errors like 'Cannot expand invalid navigation property', check Section 11.\nCommon fixes:\n- DocumentLines → Document_Lines\n- ItemPrices → PriceListLines\n- BPAddresses → BPFiscalTaxIDCollection\n\n🚀 QUICK START:\n1. Set variables (username, password, companyDB)\n2. Run Login (Section 1)\n3. If navigation errors occur, run Section 11 discovery\n4. Use SQL alternatives if needed\n\n📋 INCLUDES:\n- All standard entities (BP, Items, Documents, etc.)\n- Financial operations\n- Inventory management\n- Services and actions\n- Navigation property discovery\n- SQL fallback queries",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "2.1"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://sapb1v10.barrdega.com:50000/b1s/v2",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "companyDB",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "routeId",
+      "value": ".node0",
+      "type": "string"
+    },
+    {
+      "key": "bpNavProps",
+      "value": "[]",
+      "type": "string",
+      "description": "Discovered BusinessPartner navigation properties"
+    },
+    {
+      "key": "itemNavProps",
+      "value": "[]",
+      "type": "string",
+      "description": "Discovered Item navigation properties"
+    },
+    {
+      "key": "orderNavProps",
+      "value": "[]",
+      "type": "string",
+      "description": "Discovered Order navigation properties"
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "// Auto-add session cookie to all requests except Login",
+          "if (!pm.request.url.path.includes('Login') && pm.collectionVariables.get('sessionId')) {",
+          "    pm.request.headers.add({",
+          "        key: 'Cookie',",
+          "        value: 'B1SESSION=' + pm.collectionVariables.get('sessionId') + '; ROUTEID=' + pm.collectionVariables.get('routeId')",
+          "    });",
+          "}",
+          "",
+          "// Add OData v4 headers",
+          "pm.request.headers.add({key: 'OData-Version', value: '4.0'});",
+          "pm.request.headers.add({key: 'Accept', value: 'application/json'});"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Start Here - Authentication",
+      "item": [
+        {
+          "name": "Step 1: Login (Run First)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// SAP B1 v10 Session Management",
+                  "const cookies = pm.response.headers.get('Set-Cookie');",
+                  "",
+                  "if (cookies) {",
+                  "    // Extract B1SESSION",
+                  "    const sessionMatch = cookies.match(/B1SESSION=([^;]+)/);",
+                  "    if (sessionMatch) {",
+                  "        pm.collectionVariables.set('sessionId', sessionMatch[1]);",
+                  "        console.log('✓ B1SESSION saved: ' + sessionMatch[1]);",
+                  "    }",
+                  "    ",
+                  "    // Extract ROUTEID",
+                  "    const routeMatch = cookies.match(/ROUTEID=([^;]+)/);",
+                  "    if (routeMatch) {",
+                  "        pm.collectionVariables.set('routeId', routeMatch[1]);",
+                  "        console.log('✓ ROUTEID saved: ' + routeMatch[1]);",
+                  "    }",
+                  "}",
+                  "",
+                  "// Save session info",
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    console.log('✓ Logged in to company: ' + response.CompanyDB);",
+                  "    console.log('✓ Version: ' + response.Version);",
+                  "}",
+                  "",
+                  "pm.test('Login successful', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"CompanyDB\": \"{{companyDB}}\",\n    \"UserName\": \"{{username}}\",\n    \"Password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/Login",
+              "host": ["{{baseUrl}}"],
+              "path": ["Login"]
+            },
+            "description": "Login to SAP B1 v10. This creates a session and returns cookies needed for all subsequent requests."
+          }
+        },
+        {
+          "name": "Step 2: Verify Session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/CompanyService_GetCompanyInfo",
+              "host": ["{{baseUrl}}"],
+              "path": ["CompanyService_GetCompanyInfo"]
+            },
+            "description": "Verify your session is working by getting company information"
+          }
+        },
+        {
+          "name": "Step 3: Get Available Entities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Returns all available entities in your SAP B1 v10 instance"
+          }
+        },
+        {
+          "name": "Get $metadata (All Fields)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/$metadata",
+              "host": ["{{baseUrl}}"],
+              "path": ["$metadata"]
+            },
+            "description": "Returns complete OData v4 metadata including all entities, properties, and relationships"
+          }
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set('sessionId', '');",
+                  "pm.collectionVariables.set('routeId', '');",
+                  "console.log('✓ Session cleared');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/Logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["Logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1.5 Quick Navigation Test",
+      "item": [
+        {
+          "name": "Test Common Navigation Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "If you're getting navigation property errors, try these common v10 patterns:\n\n1. For Documents: Document_Lines (with underscore)\n2. For Items: ItemWarehouseInfoCollection\n3. For BusinessPartners: ContactEmployees\n\nSee Section 11 for full navigation discovery"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Business Partners - v10",
+      "item": [
+        {
+          "name": "Get All Business Partners",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Prefer",
+                "value": "odata.maxpagesize=20"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners"]
+            }
+          }
+        },
+        {
+          "name": "Get BP with Common Fields",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners?$select=CardCode,CardName,CardType,GroupCode,Phone1,Cellular,EmailAddress,ContactPerson,Notes,Valid,Frozen,CreditLimit&$top=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners"],
+              "query": [
+                {
+                  "key": "$select",
+                  "value": "CardCode,CardName,CardType,GroupCode,Phone1,Cellular,EmailAddress,ContactPerson,Notes,Valid,Frozen,CreditLimit"
+                },
+                {
+                  "key": "$top",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Customers Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners?$filter=CardType eq 'cCustomer' and Valid eq 'tYES' and Frozen eq 'tNO'&$select=CardCode,CardName,CreditLimit,PayTermsGrpCode&$orderby=CardName&$top=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners"],
+              "query": [
+                {
+                  "key": "$filter",
+                  "value": "CardType eq 'cCustomer' and Valid eq 'tYES' and Frozen eq 'tNO'"
+                },
+                {
+                  "key": "$select",
+                  "value": "CardCode,CardName,CreditLimit,PayTermsGrpCode"
+                },
+                {
+                  "key": "$orderby",
+                  "value": "CardName"
+                },
+                {
+                  "key": "$top",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Suppliers Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners?$filter=CardType eq 'cSupplier'&$select=CardCode,CardName,Phone1,EmailAddress&$top=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners"],
+              "query": [
+                {
+                  "key": "$filter",
+                  "value": "CardType eq 'cSupplier'"
+                },
+                {
+                  "key": "$select",
+                  "value": "CardCode,CardName,Phone1,EmailAddress"
+                },
+                {
+                  "key": "$top",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get BP by CardCode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners('C00001')",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners('C00001')"]
+            }
+          }
+        },
+        {
+          "name": "Get BP Navigation Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/$metadata#BusinessPartners",
+              "host": ["{{baseUrl}}"],
+              "path": ["$metadata#BusinessPartners"]
+            },
+            "description": "First, run this to see available navigation properties for BusinessPartners"
+          }
+        },
+        {
+          "name": "Get BP with Addresses (v10)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners('C00001')?$expand=BPAddresses",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners('C00001')"],
+              "query": [
+                {
+                  "key": "$expand",
+                  "value": "BPAddresses"
+                }
+              ]
+            },
+            "description": "NOTE: If this fails, try: BusinessPartner_Addresses, Addresses, or BPAddress (check metadata first)"
+          }
+        },
+        {
+          "name": "Alternative: Get BP Addresses Collection",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners('C00001')/BPAddresses",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners('C00001')", "BPAddresses"]
+            },
+            "description": "Direct access to addresses collection - if this fails, check the navigation link in the BP response"
+          }
+        },
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"CardCode\": \"C99999\",\n    \"CardName\": \"Test Customer v10\",\n    \"CardType\": \"cCustomer\",\n    \"GroupCode\": 100,\n    \"Currency\": \"##\",\n    \"Phone1\": \"555-1234\",\n    \"EmailAddress\": \"test@example.com\",\n    \"Series\": 1,\n    \"Valid\": \"tYES\",\n    \"Frozen\": \"tNO\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners"]
+            },
+            "description": "Create minimal BP first. Add addresses separately if navigation property fails."
+          }
+        },
+        {
+          "name": "Create Customer with Details",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"CardCode\": \"C99998\",\n    \"CardName\": \"Test Customer Complete\",\n    \"CardType\": \"cCustomer\",\n    \"GroupCode\": 100,\n    \"Phone1\": \"555-1234\",\n    \"EmailAddress\": \"test@example.com\",\n    \"ContactPerson\": \"John Doe\",\n    \"Notes\": \"Created via API\",\n    \"Valid\": \"tYES\",\n    \"Frozen\": \"tNO\",\n    \"ContactEmployees\": [\n        {\n            \"Name\": \"John Doe\",\n            \"Position\": \"Manager\",\n            \"Phone1\": \"555-1234\",\n            \"E_Mail\": \"john@example.com\",\n            \"Active\": \"tYES\"\n        }\n    ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners"]
+            },
+            "description": "Create with contact employees (usually works in v10)"
+          }
+        },
+        {
+          "name": "Update Business Partner",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Phone1\": \"555-5678\",\n    \"EmailAddress\": \"updated@example.com\",\n    \"Notes\": \"Updated on {{$timestamp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners('C99999')",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners('C99999')"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Items - v10",
+      "item": [
+        {
+          "name": "Get All Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/Items?$top=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["Items"],
+              "query": [
+                {
+                  "key": "$top",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Items with Stock Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/Items?$select=ItemCode,ItemName,QuantityOnStock,QuantityOrderedFromVendors,QuantityOrderedByCustomers,InventoryItem,SalesItem,PurchaseItem&$filter=InventoryItem eq 'tYES'&$top=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["Items"],
+              "query": [
+                {
+                  "key": "$select",
+                  "value": "ItemCode,ItemName,QuantityOnStock,QuantityOrderedFromVendors,QuantityOrderedByCustomers,InventoryItem,SalesItem,PurchaseItem"
+                },
+                {
+                  "key": "$filter",
+                  "value": "InventoryItem eq 'tYES'"
+                },
+                {
+                  "key": "$top",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Item by ItemCode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/Items('A00001')",
+              "host": ["{{baseUrl}}"],
+              "path": ["Items('A00001')"]
+            }
+          }
+        },
+        {
+          "name": "Get Item with Prices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/Items('A00001')?$expand=ItemPrices",
+              "host": ["{{baseUrl}}"],
+              "path": ["Items('A00001')"],
+              "query": [
+                {
+                  "key": "$expand",
+                  "value": "ItemPrices"
+                }
+              ]
+            },
+            "description": "Note: If 'ItemPrices' fails, try: PriceListLines or check section 11 for navigation discovery"
+          }
+        },
+        {
+          "name": "Create Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ItemCode\": \"I99999\",\n    \"ItemName\": \"Test Item v10\",\n    \"ItemType\": \"itItems\",\n    \"ItemsGroupCode\": 100,\n    \"InventoryItem\": \"tYES\",\n    \"SalesItem\": \"tYES\",\n    \"PurchaseItem\": \"tYES\",\n    \"QuantityOnStock\": 0,\n    \"ManageSerialNumbers\": \"tNO\",\n    \"ManageBatchNumbers\": \"tNO\",\n    \"Valid\": \"tYES\",\n    \"Frozen\": \"tNO\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/Items",
+              "host": ["{{baseUrl}}"],
+              "path": ["Items"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Sales Documents - v10",
+      "item": [
+        {
+          "name": "Quotations",
+          "item": [
+            {
+              "name": "Get Quotations",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/Quotations?$select=DocEntry,DocNum,CardCode,CardName,DocDate,DocDueDate,DocTotal,DocumentStatus&$top=20&$orderby=DocNum desc",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Quotations"],
+                  "query": [
+                    {
+                      "key": "$select",
+                      "value": "DocEntry,DocNum,CardCode,CardName,DocDate,DocDueDate,DocTotal,DocumentStatus"
+                    },
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    },
+                    {
+                      "key": "$orderby",
+                      "value": "DocNum desc"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Quotation",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"CardCode\": \"C00001\",\n    \"DocDueDate\": \"2025-12-31\",\n    \"BPL_IDAssignedToInvoice\": 1,\n    \"DocumentLines\": [\n        {\n            \"ItemCode\": \"A00001\",\n            \"Quantity\": 10,\n            \"TaxCode\": \"S1\",\n            \"WarehouseCode\": \"01\"\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/Quotations",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Quotations"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sales Orders",
+          "item": [
+            {
+              "name": "Get Sales Orders",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/Orders?$select=DocEntry,DocNum,CardCode,CardName,DocDate,DocDueDate,DocTotal,DocumentStatus&$filter=DocumentStatus eq 'bost_Open'&$top=20&$orderby=DocNum desc",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Orders"],
+                  "query": [
+                    {
+                      "key": "$select",
+                      "value": "DocEntry,DocNum,CardCode,CardName,DocDate,DocDueDate,DocTotal,DocumentStatus"
+                    },
+                    {
+                      "key": "$filter",
+                      "value": "DocumentStatus eq 'bost_Open'"
+                    },
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    },
+                    {
+                      "key": "$orderby",
+                      "value": "DocNum desc"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Order with Lines",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/Orders(123)?$expand=DocumentLines",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Orders(123)"],
+                  "query": [
+                    {
+                      "key": "$expand",
+                      "value": "DocumentLines"
+                    }
+                  ]
+                },
+                "description": "Note: If 'DocumentLines' fails, try: Document_Lines, Lines, or OrderLines"
+              }
+            },
+            {
+              "name": "Create Sales Order",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"CardCode\": \"C00001\",\n    \"DocDueDate\": \"2025-12-31\",\n    \"BPL_IDAssignedToInvoice\": 1,\n    \"Comments\": \"Created via Service Layer v2\",\n    \"DocumentLines\": [\n        {\n            \"ItemCode\": \"A00001\",\n            \"Quantity\": 10,\n            \"Price\": 100,\n            \"TaxCode\": \"S1\",\n            \"WarehouseCode\": \"01\"\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/Orders",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Orders"]
+                },
+                "description": "Note: If 'DocumentLines' fails, try 'Document_Lines' (with underscore) or 'Lines'"
+              }
+            },
+            {
+              "name": "Cancel Sales Order",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/Orders(123)/Cancel",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Orders(123)", "Cancel"]
+                }
+              }
+            },
+            {
+              "name": "Close Sales Order",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/Orders(123)/Close",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Orders(123)", "Close"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deliveries",
+          "item": [
+            {
+              "name": "Get Deliveries",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/DeliveryNotes?$select=DocEntry,DocNum,CardCode,CardName,DocDate,DocTotal&$top=20&$orderby=DocNum desc",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["DeliveryNotes"],
+                  "query": [
+                    {
+                      "key": "$select",
+                      "value": "DocEntry,DocNum,CardCode,CardName,DocDate,DocTotal"
+                    },
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    },
+                    {
+                      "key": "$orderby",
+                      "value": "DocNum desc"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Delivery from Order",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"CardCode\": \"C00001\",\n    \"Comments\": \"Delivery based on Sales Order\",\n    \"BPL_IDAssignedToInvoice\": 1,\n    \"DocumentLines\": [\n        {\n            \"BaseType\": 17,\n            \"BaseEntry\": 123,\n            \"BaseLine\": 0\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/DeliveryNotes",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["DeliveryNotes"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "A/R Invoices",
+          "item": [
+            {
+              "name": "Get Invoices",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/Invoices?$select=DocEntry,DocNum,CardCode,CardName,DocDate,DocDueDate,DocTotal,PaidToDate&$top=20&$orderby=DocNum desc",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Invoices"],
+                  "query": [
+                    {
+                      "key": "$select",
+                      "value": "DocEntry,DocNum,CardCode,CardName,DocDate,DocDueDate,DocTotal,PaidToDate"
+                    },
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    },
+                    {
+                      "key": "$orderby",
+                      "value": "DocNum desc"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Invoice",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"CardCode\": \"C00001\",\n    \"DocDueDate\": \"2025-12-31\",\n    \"BPL_IDAssignedToInvoice\": 1,\n    \"DocumentLines\": [\n        {\n            \"ItemCode\": \"A00001\",\n            \"Quantity\": 10,\n            \"Price\": 100,\n            \"TaxCode\": \"S1\"\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/Invoices",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Invoices"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "A/R Credit Notes",
+          "item": [
+            {
+              "name": "Get Credit Notes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/CreditNotes?$select=DocEntry,DocNum,CardCode,CardName,DocDate,DocTotal&$top=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["CreditNotes"],
+                  "query": [
+                    {
+                      "key": "$select",
+                      "value": "DocEntry,DocNum,CardCode,CardName,DocDate,DocTotal"
+                    },
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Returns",
+          "item": [
+            {
+              "name": "Get Returns",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/Returns?$top=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Returns"],
+                  "query": [
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5. Purchase Documents - v10",
+      "item": [
+        {
+          "name": "Purchase Orders",
+          "item": [
+            {
+              "name": "Get Purchase Orders",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/PurchaseOrders?$select=DocEntry,DocNum,CardCode,CardName,DocDate,DocDueDate,DocTotal,DocumentStatus&$top=20&$orderby=DocNum desc",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["PurchaseOrders"],
+                  "query": [
+                    {
+                      "key": "$select",
+                      "value": "DocEntry,DocNum,CardCode,CardName,DocDate,DocDueDate,DocTotal,DocumentStatus"
+                    },
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    },
+                    {
+                      "key": "$orderby",
+                      "value": "DocNum desc"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Purchase Order",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"CardCode\": \"S00001\",\n    \"DocDueDate\": \"2025-12-31\",\n    \"BPL_IDAssignedToInvoice\": 1,\n    \"DocumentLines\": [\n        {\n            \"ItemCode\": \"A00001\",\n            \"Quantity\": 100,\n            \"Price\": 80,\n            \"WarehouseCode\": \"01\"\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/PurchaseOrders",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["PurchaseOrders"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Goods Receipt PO",
+          "item": [
+            {
+              "name": "Get Goods Receipts",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/PurchaseDeliveryNotes?$top=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["PurchaseDeliveryNotes"],
+                  "query": [
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "A/P Invoices",
+          "item": [
+            {
+              "name": "Get Purchase Invoices",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/PurchaseInvoices?$select=DocEntry,DocNum,CardCode,CardName,DocDate,DocTotal&$top=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["PurchaseInvoices"],
+                  "query": [
+                    {
+                      "key": "$select",
+                      "value": "DocEntry,DocNum,CardCode,CardName,DocDate,DocTotal"
+                    },
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "6. Inventory - v10",
+      "item": [
+        {
+          "name": "Warehouses",
+          "item": [
+            {
+              "name": "Get All Warehouses",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/Warehouses",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Warehouses"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Inventory Counting",
+          "item": [
+            {
+              "name": "Get Inventory Countings",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/InventoryCountings?$top=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["InventoryCountings"],
+                  "query": [
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Inventory Transactions",
+          "item": [
+            {
+              "name": "Goods Receipt",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"Comments\": \"Initial stock\",\n    \"BPL_IDAssignedToInvoice\": 1,\n    \"DocumentLines\": [\n        {\n            \"ItemCode\": \"A00001\",\n            \"Quantity\": 100,\n            \"Price\": 10,\n            \"WarehouseCode\": \"01\"\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/InventoryGenEntries",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["InventoryGenEntries"]
+                }
+              }
+            },
+            {
+              "name": "Goods Issue",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"Comments\": \"Stock adjustment\",\n    \"BPL_IDAssignedToInvoice\": 1,\n    \"DocumentLines\": [\n        {\n            \"ItemCode\": \"A00001\",\n            \"Quantity\": 5,\n            \"WarehouseCode\": \"01\"\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/InventoryGenExits",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["InventoryGenExits"]
+                }
+              }
+            },
+            {
+              "name": "Stock Transfer",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"DocDate\": \"2025-07-10\",\n    \"FromWarehouse\": \"01\",\n    \"ToWarehouse\": \"02\",\n    \"Comments\": \"Transfer between warehouses\",\n    \"StockTransferLines\": [\n        {\n            \"ItemCode\": \"A00001\",\n            \"Quantity\": 10,\n            \"FromWarehouseCode\": \"01\",\n            \"WarehouseCode\": \"02\"\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/StockTransfers",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["StockTransfers"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "7. Finance - v10",
+      "item": [
+        {
+          "name": "Chart of Accounts",
+          "item": [
+            {
+              "name": "Get All Accounts",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/ChartOfAccounts?$select=Code,Name,ActiveAccount,AccountType&$top=50",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["ChartOfAccounts"],
+                  "query": [
+                    {
+                      "key": "$select",
+                      "value": "Code,Name,ActiveAccount,AccountType"
+                    },
+                    {
+                      "key": "$top",
+                      "value": "50"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Journal Entries",
+          "item": [
+            {
+              "name": "Get Journal Entries",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/JournalEntries?$select=JdtNum,RefDate,DueDate,Memo&$top=20&$orderby=JdtNum desc",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["JournalEntries"],
+                  "query": [
+                    {
+                      "key": "$select",
+                      "value": "JdtNum,RefDate,DueDate,Memo"
+                    },
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    },
+                    {
+                      "key": "$orderby",
+                      "value": "JdtNum desc"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Journal Entry",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"ReferenceDate\": \"2025-07-10\",\n    \"DueDate\": \"2025-07-10\",\n    \"TaxDate\": \"2025-07-10\",\n    \"Memo\": \"Manual Journal Entry\",\n    \"JournalEntryLines\": [\n        {\n            \"AccountCode\": \"100000\",\n            \"Debit\": 1000,\n            \"Credit\": 0,\n            \"LineMemo\": \"Debit\"\n        },\n        {\n            \"AccountCode\": \"200000\",\n            \"Debit\": 0,\n            \"Credit\": 1000,\n            \"LineMemo\": \"Credit\"\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/JournalEntries",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["JournalEntries"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Payments",
+          "item": [
+            {
+              "name": "Get Incoming Payments",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/IncomingPayments?$select=DocNum,DocDate,CardCode,CardName,DocTotal&$top=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["IncomingPayments"],
+                  "query": [
+                    {
+                      "key": "$select",
+                      "value": "DocNum,DocDate,CardCode,CardName,DocTotal"
+                    },
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Incoming Payment",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"CardCode\": \"C00001\",\n    \"DocDate\": \"2025-07-10\",\n    \"CashSum\": 1000,\n    \"CashAccount\": \"161000\",\n    \"DocCurrency\": \"USD\",\n    \"Remarks\": \"Payment received\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/IncomingPayments",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["IncomingPayments"]
+                }
+              }
+            },
+            {
+              "name": "Get Outgoing Payments",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/VendorPayments?$top=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["VendorPayments"],
+                  "query": [
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "8. Services - v10",
+      "item": [
+        {
+          "name": "Company Service",
+          "item": [
+            {
+              "name": "Get Company Info",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/CompanyService_GetCompanyInfo",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["CompanyService_GetCompanyInfo"]
+                }
+              }
+            },
+            {
+              "name": "Get Period Status",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/CompanyService_GetPeriods",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["CompanyService_GetPeriods"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Attachments",
+          "item": [
+            {
+              "name": "Get Attachments",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/Attachments2?$top=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Attachments2"],
+                  "query": [
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Activities",
+          "item": [
+            {
+              "name": "Get Activities",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/Activities?$top=20",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["Activities"],
+                  "query": [
+                    {
+                      "key": "$top",
+                      "value": "20"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "9. Queries - v10",
+      "item": [
+        {
+          "name": "Execute SQL Query",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "B1S-ReplaceCollectionsOnPatch",
+                "value": "true"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"SqlText\": \"SELECT TOP 10 CardCode, CardName FROM OCRD WHERE CardType = 'C'\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/SQLQueries('sql')/List",
+              "host": ["{{baseUrl}}"],
+              "path": ["SQLQueries('sql')", "List"]
+            }
+          }
+        },
+        {
+          "name": "Get User Queries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/UserQueries",
+              "host": ["{{baseUrl}}"],
+              "path": ["UserQueries"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Batch Requests - v10",
+      "item": [
+        {
+          "name": "Batch Request Example",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/mixed;boundary=batch_request"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "--batch_request\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET BusinessPartners?$select=CardCode,CardName&$top=5 HTTP/1.1\nAccept: application/json\n\n--batch_request\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET Items?$select=ItemCode,ItemName&$top=5 HTTP/1.1\nAccept: application/json\n\n--batch_request--"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/$batch",
+              "host": ["{{baseUrl}}"],
+              "path": ["$batch"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Navigation Property Discovery & Fixes",
+      "item": [
+        {
+          "name": "IMPORTANT - Read First",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Navigation properties like 'BPAddresses', 'ItemPrices', 'DocumentLines' may have different names in SAP B1 v10.\n\nCommon variations:\n- DocumentLines → Document_Lines, Lines, OrderLines\n- ItemPrices → PriceListLines, Prices\n- BPAddresses → BPFiscalTaxIDCollection, ContactEmployees\n\nRun the discovery requests below to find your exact property names!"
+          }
+        },
+        {
+          "name": "Find All Navigation Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/BusinessPartners?$top=1&$format=json",
+              "host": ["{{baseUrl}}"],
+              "path": ["BusinessPartners"],
+              "query": [
+                {
+                  "key": "$top",
+                  "value": "1"
+                },
+                {
+                  "key": "$format",
+                  "value": "json"
+                }
+              ]
+            },
+            "description": "Look for properties ending with '@odata.navigationLink' in the response. These show the exact navigation property names."
+          }
+        },
+        {
+          "name": "Common v10 Navigation Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Common navigation properties in v10:\n\nBusinessPartners:\n- ContactEmployees\n- BPFiscalTaxIDCollection\n- BPPaymentMethods\n- BPBankAccounts\n- BPWithholdingTaxCollection\n- BPPaymentDates\n- BPBranchAssignment\n- BPAccountReceivablePaybleCollection\n\nItems:\n- ItemWarehouseInfoCollection\n- ItemPrices\n- ItemBarCodeCollection\n- ItemPreferredVendors\n\nDocuments:\n- DocumentLines\n- DocumentAdditionalExpenses\n- TaxExtension\n- AddressExtension\n- DocumentReferences\n- DocumentPackages"
+          }
+        },
+        {
+          "name": "Check Metadata for Entity",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/$metadata",
+              "host": ["{{baseUrl}}"],
+              "path": ["$metadata"]
+            },
+            "description": "Search for <EntityType Name=\"BusinessPartner\"> in the XML response to see all NavigationProperty elements"
+          }
+        },
+        {
+          "name": "Alternative SQL Query",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"SqlText\": \"SELECT T0.CardCode, T0.CardName, T1.Address, T1.Street, T1.City FROM OCRD T0 LEFT JOIN CRD1 T1 ON T0.CardCode = T1.CardCode WHERE T0.CardCode = 'C00001'\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/SQLQueries('sql')/List",
+              "host": ["{{baseUrl}}"],
+              "path": ["SQLQueries('sql')", "List"]
+            },
+            "description": "If navigation properties don't work, use SQL joins:\n\nOCRD = Business Partners\nCRD1 = BP Addresses\nOCPR = Contact Persons\nCRD7 = BP Tax IDs\nORDR = Sales Orders\nRDR1 = Order Lines"
+          }
+        }
+      ]
+    }
+  ]
+}
